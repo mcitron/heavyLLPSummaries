@@ -92,9 +92,9 @@ def stripGraph(graph,minX,maxX,minY,maxY):
 
 def makePlot(analyses,massZ,massesX,finalState,outputDir):
     if "2" in finalState:
-        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];95% CL upper limit on #sigma #it{B} [fb]",100,0.1,100000)
+        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];#sigma #it{B} [fb]",100,0.1,100000)
     else:
-        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];95% CL upper limit on #sigma #it{B}^{2} [fb]",100,0.1,100000)
+        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];#sigma #it{B}^{2} [fb]",100,0.1,100000)
     oC = r.TCanvas("c","",1300,900)
 
     oC.SetLeftMargin(left)
@@ -104,6 +104,8 @@ def makePlot(analyses,massZ,massesX,finalState,outputDir):
 
     # oC.SetBottomMargin(0.15); 
     dummyHist.GetXaxis().SetTitleOffset(1.3);
+    dummyHist.SetLineColor(r.kBlack)
+    dummyHist.SetLineWidth(0)
     # dummyHist.GetXaxis().SetTitleSize(0.04);
     # dummyHist.GetYaxis().SetTitleSize(0.04);
     oC.SetLogx()
@@ -141,7 +143,7 @@ def makePlot(analyses,massZ,massesX,finalState,outputDir):
             graph.SetLineStyle(styles[int(math.ceil(10*(massX*1./massZ)))])
             graph.SetLineWidth(2)
             graph.SetMarkerColor(colours[analysis])
-            print (finalState,analysis,massX)
+            # print (finalState,analysis,massX)
             if analysis == "MS Clusters":
                 scaleGraph(graph,1000,1000)
             if analysis == "Delayed jets":
@@ -156,7 +158,7 @@ def makePlot(analyses,massZ,massesX,finalState,outputDir):
             leg = r.TLegend(x,y-dy_leg,x+dx,y)
             leg.SetBorderSize(0)
             leg.SetTextSize(legtxt+0.005)
-            leg.AddEntry(graph,analysisNames[analysis],"l")
+            leg.AddEntry(graph,"#bf{"+analysisNames[analysis]+"}","l")
             leg.Draw()
             legends.append(leg)
             y-=dy_leg # update y
@@ -189,7 +191,7 @@ def makePlot(analyses,massZ,massesX,finalState,outputDir):
         dummyGraph.SetLineColor(r.kBlack)
         dummyGraph.SetLineStyle(styles[int(math.ceil(10*(massX*1./massZ)))])
         # dummyGraph.SetLineStyle(styles[int(math.ceil(10*(massX*1./massZ)))])
-        legMass = r.TLegend(xMassLeg,y-dy_leg*1.1,xMassLeg+dx,y)
+        legMass = r.TLegend(xMassLeg,y-dy_leg*1.1+0.05,xMassLeg+dx,y+0.05)
         legMass.SetBorderSize(0)
         legMass.SetTextSize(legtxt+0.005)
         legMass.AddEntry(dummyGraph,"m_{{Z'}} = {} GeV, m_{{X}} = {} GeV".format(massZ,massX),"l")
@@ -208,6 +210,10 @@ def makePlot(analyses,massZ,massesX,finalState,outputDir):
     # latex.DrawLatex(600,3,"#bf{m_{X'} = 1.95 TeV}")
     latex.DrawLatex(1-right-0.31,1-top+0.02,"#bf{132 - 140 fb^{-1} (13 TeV)}")
     latex.SetTextSize(0.04)
+    latexTitle = r.TLatex()
+    latexTitle.SetNDC(1)
+    latexTitle.SetTextSize(0.035)
+    latexTitle.DrawLatex(1-right+0.03,1-top,"#bf{95% CL upper limits}")
     oC.SaveAs(outputDir+"/zPrimeSummary_{}_{}.pdf".format(massZ,finalState))
 if __name__=="__main__":
     main()

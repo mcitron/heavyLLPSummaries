@@ -49,9 +49,9 @@ def stripGraph(graph,minX,maxX,minY,maxY):
 
 def makePlot(analyses,massH,massesX,finalState,outputDir):
     if "2" in finalState:
-        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];95% CL upper limit on #sigma #it{B} [fb]",100,0.1,100000)
+        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];#sigma #it{B} [fb]",100,0.1,100000)
     else:
-        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];95% CL upper limit on #sigma #it{B}^{2} [fb]",100,0.1,100000)
+        dummyHist = r.TH1D("dummy",";c#tau_{X} [mm];#sigma #it{B}^{2} [fb]",100,0.1,100000)
     oC = r.TCanvas("c","",1300,900)
 
     oC.SetLeftMargin(left)
@@ -59,13 +59,15 @@ def makePlot(analyses,massH,massesX,finalState,outputDir):
     oC.SetTopMargin(top)
     oC.SetBottomMargin(0.15); 
     dummyHist.GetXaxis().SetTitleOffset(1.3);
+    dummyHist.SetLineColor(r.kBlack)
+    dummyHist.SetLineWidth(0)
     # dummyHist.GetXaxis().SetTitleSize(0.04);
     # dummyHist.GetYaxis().SetTitleSize(0.04);
     oC.SetLogx()
     oC.SetLogy()
     dummyHist.Draw()
-    dummyHist.SetMaximum(2000000)
-    dummyHist.SetMinimum(0.02)
+    dummyHist.SetMaximum(4000000)
+    dummyHist.SetMinimum(0.04)
     leg = r.TLegend(0.35,0.7,0.85,0.89)
     leg.SetBorderSize(0)
     if "2nu" in finalState:
@@ -111,7 +113,7 @@ def makePlot(analyses,massH,massesX,finalState,outputDir):
             leg = r.TLegend(x,y-dy_leg,x+dx,y)
             leg.SetBorderSize(0)
             leg.SetTextSize(legtxt+0.005)
-            leg.AddEntry(graph,analysisNames[analysis],"l")
+            leg.AddEntry(graph,"#bf{"+analysisNames[analysis]+"}","l")
             leg.Draw()
             legends.append(leg)
             y-=dy_leg # update y
@@ -137,7 +139,7 @@ def makePlot(analyses,massH,massesX,finalState,outputDir):
         dummyGraph = r.TGraph(2,array.array("d",[0,1]),array.array("d",[0,1]))
         dummyGraph.SetLineColor(r.kBlack)
         dummyGraph.SetLineStyle(styles[int(math.ceil(10*(massX*1./massH)))])
-        legMass = r.TLegend(xMassLeg,y-dy_leg*1.1,xMassLeg+dx,y)
+        legMass = r.TLegend(xMassLeg,y-dy_leg*1.1+0.05,xMassLeg+dx,y+0.05)
         legMass.SetBorderSize(0)
         legMass.SetTextSize(legtxt+0.005)
         legMass.AddEntry(dummyGraph,"m_{{H_{{D}}}} = {} GeV, m_{{X}} = {} GeV".format(massH,massX),"l")
@@ -158,6 +160,11 @@ def makePlot(analyses,massH,massesX,finalState,outputDir):
     drawCMS(xCMS,yCMS)
     # latex.SetTextSize(0.04)
     latex.DrawLatex(1-right-0.31,1-top+0.02,"#bf{132 - 140 fb^{-1} (13 TeV)}")
+    latexTitle = r.TLatex()
+    latexTitle.SetNDC(1)
+    latexTitle.SetTextSize(0.035)
+    latexTitle.DrawLatex(1-right+0.03,1-top,"#bf{95% CL upper limits}")
+    # latexTitle.DrawLatex()
     oC.SaveAs(outputDir+"/higgsSummary_{}_{}.pdf".format(massH,finalState))
 if __name__=="__main__":
     main()

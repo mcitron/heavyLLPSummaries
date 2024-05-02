@@ -27,4 +27,4 @@ dy_leg   = legtxt*1.3 #size of legend in y
 dy_misc = dy_leg*0.6 # misc padding btw leg and decay mode
 dy_decay  = dy_leg*1.0 #dy between decay mode and arxiv
 dy_arxiv = dy_leg*1.0 #dy between arxiv and title(legend)
-y_start = 1-top #-0.1*dy_leg # start of first title in y
+y_start = 1-top-0.05 #-0.1*dy_leg # start of first title in y
